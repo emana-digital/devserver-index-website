@@ -1,4 +1,10 @@
 {
-  "name": "@emana-digital/devserver-index-website",
-  "packageManager": "yarn@3.2.0"
+	"name": "@emana-digital/devserver-index-website",
+	"packageManager": "yarn@3.2.0",
+	"scripts": {
+		"build": "echo 'build'"
+	},
+	"devDependencies": {
+		"prettier": "^2.6.2"
+	}
 }

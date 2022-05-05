@@ -1,14 +1,29 @@
-/node_modules
-/public/hot
-/public/storage
+# Ide
+.vscode/
+.idea/
+
+# Dependencies
+.yalc/
+yalc.lock
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+node_modules/
+vendor/
+
+# Front-end Build
+public/assets/
+
+# Project
+public/storage/
 /storage/*.key
-/vendor
 .env
-.env.backup
 .phpunit.result.cache
-Homestead.json
-Homestead.yaml
-npm-debug.log
 yarn-error.log
-/.idea
-/.vscode
+
+# OS
+.DS_Store
