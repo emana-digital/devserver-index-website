@@ -103,11 +103,11 @@ jobs:
           SSHPASS: ${{ secrets.SSH_PASSWORD }}
 
       - name: Optmize Config
-        run: sshpass -e ssh emana-bot@${{ secrets.SSH_SERVER }} "echo ${{ secrets.SSH_PASSWORD }} | sudo -S php /var/www/dev.emana.digital/artisan config:cache"
+        run: sshpass -e ssh emana-bot@${{ secrets.SSH_SERVER }} "echo ${{ secrets.SSH_PASSWORD }} | sudo -S php8.1 /var/www/dev.emana.digital/artisan config:cache"
         env:
           SSHPASS: ${{ secrets.SSH_PASSWORD }}
 
       - name: Optmize View
-        run: sshpass -e ssh emana-bot@${{ secrets.SSH_SERVER }} "echo ${{ secrets.SSH_PASSWORD }} | sudo -S php /var/www/dev.emana.digital/artisan view:cache"
+        run: sshpass -e ssh emana-bot@${{ secrets.SSH_SERVER }} "echo ${{ secrets.SSH_PASSWORD }} | sudo -S php8.1 /var/www/dev.emana.digital/artisan view:cache"
         env:
           SSHPASS: ${{ secrets.SSH_PASSWORD }}
