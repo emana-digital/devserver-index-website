@@ -1,0 +1,24 @@
+{
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"ecmaFeatures": {
+			"jsx": true
+		},
+		"ecmaVersion": 12,
+		"sourceType": "module"
+	},
+	"plugins": ["react", "@typescript-eslint"],
+	"extends": ["standard", "plugin:react/recommended", "plugin:react-hooks/recommended"],
+	"env": {
+		"browser": true,
+		"es2021": true
+	},
+	"rules": {
+		"indent": ["warn", "tab"],
+		"no-tabs": "off",
+		"semi": ["warn", "always"],
+		"multiline-ternary": "off",
+		"no-use-before-define": "off",
+		"@typescript-eslint/no-use-before-define": ["error"]
+	}
+}

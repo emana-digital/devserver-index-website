@@ -1,0 +1,30 @@
+{
+	"compilerOptions": {
+		"outDir": "public/assets",
+		"lib": ["DOM", "DOM.Iterable", "ESNext"],
+		"target": "ES5",
+		"sourceMap": true,
+		"allowJs": true,
+		"jsx": "react",
+		"moduleResolution": "Node",
+		"diagnostics": true,
+		"esModuleInterop": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"strict": true,
+		"pretty": true,
+		"noImplicitAny": true,
+		"noEmit": true,
+		"module": "ESNext",
+		"rootDir": "./resources/assets",
+		"baseUrl": "./",
+		"resolveJsonModule": true,
+		"paths": {
+			"@configs": ["resources/assets/configs/index"],
+			"@components/*": ["resources/assets/components/*"],
+			"@routes/*": ["resources/assets/routes/*"]
+		}
+	},
+	"exclude": ["node_modules/**/*", "vendor/**/*"],
+	"include": ["resources/assets/**/*"]
+}

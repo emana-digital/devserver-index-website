@@ -1,0 +1,116 @@
+name: devserver-deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: [self-hosted, devserver]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          clean: 'false'
+
+      - name: Set Php Version
+        run: sudo update-alternatives --set php /usr/bin/php7.4
+
+      - name: Back-End Install
+        run: composer install --optimize-autoloader --no-dev
+
+      - name: Front-End Install
+        run: yarn install
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Front-End Build
+        run: yarn build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Routes Json Backup
+        run: cp resources/assets/routes.json resources/routes.json
+
+      - name: Project Clear
+        run: rm -rf
+          .github/
+          .yarn/
+          resources/assets/
+          tests/
+          _ide_helper.php
+          .babelrc.js
+          .browserslistrc
+          .editorconfig
+          .eslintrc.json
+          .gitattributes
+          .gitignore
+          .phpstorm.meta.php
+          .prettierrc
+          .yarnrc.yml
+          package.json
+          postcss.config.js
+          tsconfig.json
+          webpack.config.js
+          yarn.lock
+
+      - name: Make Assets Directory Again
+        run: mkdir resources/assets/
+
+      - name: Routes Json Copy
+        run: cp resources/routes.json resources/assets/routes.json
+
+      - name: Routes Json Backup Remove
+        run: rm resources/routes.json
+
+      - name: Project Deploy Key
+        run: echo "${{ secrets.SSH_PUB_KEY }}" > '~/.ssh/authorized_keys'
+
+      - name: Project Deploy 01
+        run: lftp -e "
+          open ${{ secrets.SFTP_SERVER }};
+          user 'emana-bot' '${{ secrets.SSH_PASSWORD }}';
+          mirror ./ /var/www/dev.emana.digital/ --verbose --delete --reverse
+          --exclude-glob .git/
+          --exclude-glob node_modules/
+          --exclude-glob storage/
+          --exclude-glob .env
+          ;
+          bye;"
+
+      - name: Project Deploy 02
+        run: lftp -e "open ${{ secrets.SFTP_SERVER }};
+          user 'emana-bot' '${{ secrets.SSH_PASSWORD }}';
+          mirror ./storage/ /var/www/dev.emana.digital/storage/ --verbose --reverse;
+          bye;"
+
+      - name: Set Permissions 01
+        run: sshpass -e ssh emana-bot@${{ secrets.SSH_SERVER }} "echo ${{ secrets.SSH_PASSWORD }} | sudo -S find /var/www/dev.emana.digital/ -type f -exec chmod 644 {} \;"
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
+
+      - name: Set Permissions 02
+        run: sshpass -e ssh emana-bot@${{ secrets.SSH_SERVER }} "echo ${{ secrets.SSH_PASSWORD }} | sudo -S find /var/www/dev.emana.digital/ -type d -exec chmod 755 {} \;"
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
+
+      - name: Set Permissions 03
+        run: sshpass -e ssh emana-bot@${{ secrets.SSH_SERVER }} "echo ${{ secrets.SSH_PASSWORD }} | sudo -S chmod -R 777 /var/www/dev.emana.digital/storage"
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
+
+      - name: Set Permissions 04
+        run: sshpass -e ssh emana-bot@${{ secrets.SSH_SERVER }} "echo ${{ secrets.SSH_PASSWORD }} | sudo -S chmod -R 777 /var/www/dev.emana.digital/bootstrap/cache/"
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
+
+      - name: Optmize Config
+        run: sshpass -e ssh emana-bot@${{ secrets.SSH_SERVER }} "echo ${{ secrets.SSH_PASSWORD }} | sudo -S php /var/www/dev.emana.digital/artisan config:cache"
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
+
+      - name: Optmize View
+        run: sshpass -e ssh emana-bot@${{ secrets.SSH_SERVER }} "echo ${{ secrets.SSH_PASSWORD }} | sudo -S php /var/www/dev.emana.digital/artisan view:cache"
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
