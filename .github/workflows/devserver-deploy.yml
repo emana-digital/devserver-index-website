@@ -15,7 +15,7 @@ jobs:
           clean: 'false'
 
       - name: Set Php Version
-        run: sudo update-alternatives --set php /usr/bin/php7.4
+        run: sudo update-alternatives --set php /usr/bin/php8.1
 
       - name: Back-End Install
         run: composer install --optimize-autoloader --no-dev
