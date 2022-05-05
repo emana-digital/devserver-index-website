@@ -1,0 +1,11 @@
+{
+	"title": {
+		"base": "Índice do servidor de desenvolvimento do Emana Digital",
+		"separator": "/"
+	},
+	"routes": {
+		"index": {
+			"path": "/"
+		}
+	}
+}

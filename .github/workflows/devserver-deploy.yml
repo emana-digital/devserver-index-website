@@ -64,9 +64,6 @@ jobs:
       - name: Routes Json Backup Remove
         run: rm resources/routes.json
 
-      - name: Project Deploy Key
-        run: echo "${{ secrets.SSH_PUB_KEY }}" > '~/.ssh/authorized_keys'
-
       - name: Project Deploy 01
         run: lftp -e "
           open ${{ secrets.SFTP_SERVER }};
